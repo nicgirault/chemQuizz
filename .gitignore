@@ -40,3 +40,9 @@ buck-out/
 \.buckd/
 android/app/libs
 *.keystore
+
+# Fastlane
+dist
+fastlane/report.xml
+fastlane/.env
+*.back
