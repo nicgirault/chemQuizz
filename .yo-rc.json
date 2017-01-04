@@ -1,0 +1,6 @@
+{
+  "generator-rn-toolbox": {
+    "eslint": true,
+    "base": true
+  }
+}

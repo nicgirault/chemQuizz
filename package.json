@@ -1,0 +1,32 @@
+{
+  "name": "chemQuizz",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest",
+    "test:lint": "eslint . --quiet"
+  },
+  "dependencies": {
+    "@exponent/ex-navigation": "^2.7.0",
+    "babel-preset-react-native-stage-0": "^1.0.1",
+    "react": "15.4.1",
+    "react-native": "0.39.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.21.0",
+    "babel-eslint": "^7.1.1",
+    "babel-jest": "18.0.0",
+    "babel-preset-react-native": "^1.9.1",
+    "eslint": "^3.12.2",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.0.0",
+    "eslint-plugin-react": "^6.8.0",
+    "jest": "18.1.0",
+    "react-test-renderer": "15.4.1"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
