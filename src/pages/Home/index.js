@@ -8,18 +8,13 @@ import { Page, Button } from 'chemQuizz/src/components';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
   },
 });
 
@@ -31,12 +26,12 @@ type PropsType = {
 class Home extends Component {
   static route = {
     navigationBar: {
-      title: 'Home',
+      title: 'chemQuizz',
     },
   }
 
-  _goToInfos = () => {
-    this.props.navigator.push(Router.getRoute('infos'));
+  _goToCategories = () => {
+    this.props.navigator.push(Router.getRoute('categories'));
   }
 
   props: PropsType;
@@ -46,16 +41,9 @@ class Home extends Component {
       <Page>
         <View style={styles.container}>
           <Text style={styles.welcome}>
-            Welcome to React Native!
+            Bienvenue sur chemQuizz!
           </Text>
-          <Text style={styles.instructions}>
-            This is page the home
-          </Text>
-          <Text style={styles.instructions}>
-            Double tap R on your keyboard to reload,{'\n'}
-            Shake or press menu button for dev menu
-          </Text>
-          <Button onPress={this._goToInfos}>Go to the Info page</Button>
+          <Button onPress={this._goToCategories}>Jouer !</Button>
         </View>
       </Page>
     );
