@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { NavigationProvider, StackNavigation } from '@exponent/ex-navigation';
-import { ListView } from 'react-native';
 import * as firebase from 'firebase';
 
 import Router from 'chemQuizz/src/Router.js';
