@@ -7,4 +7,5 @@ import * as Pages from 'chemQuizz/src/pages';
 export default createRouter(() => ({
   home: () => Pages.Home,
   categories: () => Pages.Categories,
+  quizz: () => Pages.Quizz,
 }));

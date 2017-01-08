@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
+import api from '../../Utils/api';
 
 import Router from 'chemQuizz/src/Router.js';
 import { Page, Button } from 'chemQuizz/src/components';
@@ -30,8 +31,14 @@ class Home extends Component {
     },
   }
 
-  _goToCategories = () => {
-    this.props.navigator.push(Router.getRoute('categories'));
+  goToCategories = () => {
+    api.getCategories()
+      .then((categories) => {
+        this.props.navigator.push(
+          Router.getRoute('categories', {categories})
+        );
+      }
+    )
   }
 
   props: PropsType;
@@ -43,7 +50,7 @@ class Home extends Component {
           <Text style={styles.welcome}>
             Bienvenue sur chemQuizz!
           </Text>
-          <Button onPress={this._goToCategories}>Jouer !</Button>
+          <Button onPress={this.goToCategories}>Jouer !</Button>
         </View>
       </Page>
     );
