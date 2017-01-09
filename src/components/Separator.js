@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 });
 
 const Separator = props => (
-      <View style={styles.separator} />
+  <View style={styles.separator} />
 );
 
 Separator.propTypes = {

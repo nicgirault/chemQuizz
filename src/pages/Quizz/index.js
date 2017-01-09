@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
 import { Page } from 'chemQuizz/src/components';
+import { map, sample, omit } from 'lodash';
 
 const styles = StyleSheet.create({
   container: {
@@ -22,32 +23,39 @@ class Categories extends Component {
   };
   props: PropsType;
 
-  submitAnswer(answer){
-    console.log(answer);
+  submitAnswerBuilder(correctAnswer) {
+    return (answerKey) => {
+      const result = (answerKey !== correctAnswer) ? 'Failed' : 'YAY'
+      console.log(result);
+    }
   }
 
   render() {
-    const quizzList = this.props.route.params.quizzList;
-    const list = quizzList.map((quizz, index) => {
+    const quizz = sample(this.props.route.params.quizzList);
+    const { correct, ...allAnswers } = quizz;
+    const submitAnswerHandler = this.submitAnswerBuilder(correct);
+
+    const list = map(allAnswers, (answerLabel, answerKey) => {
+      console.log(answerKey);
+      console.log(answerLabel);
       return(
-        <View key={index}>
+        <View key={answerKey}>
           <View style={styles.rowContainer}>
             <TouchableHighlight
-              onPress={() => this.launchQuizz(category)}
+              onPress={() => submitAnswerHandler(answerKey)}
               underlayColor='transparent'
             >
-              <Text style={styles.categoryName}>{quizz['answer1']}</Text>
+              <Text style={styles.categoryName}>{answerLabel}</Text>
             </TouchableHighlight>
           </View>
-          <Separator />
         </View>
       )
     });
     return (
       <Page>
-        <ScrollView style={styles.container}>
+        <View style={styles.container}>
           {list}
-        </ScrollView>
+        </View>
       </Page>
     );
   }

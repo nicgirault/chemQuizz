@@ -23,4 +23,10 @@ class Scenes extends Component {
   }
 }
 
+// const Scenes = () => (
+//   <NavigationProvider router={Router}>
+//     <StackNavigation initialRoute={Router.getRoute('home')} />
+//   </NavigationProvider>
+// );
+
 export default Scenes;
