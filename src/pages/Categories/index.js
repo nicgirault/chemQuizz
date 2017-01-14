@@ -3,8 +3,8 @@ import { StyleSheet, Text, View, ScrollView, TouchableHighlight } from 'react-na
 import { withNavigation } from '@exponent/ex-navigation';
 import Router from 'chemQuizz/src/Router.js';
 import { Page, Separator } from 'chemQuizz/src/components';
+import { sample } from 'lodash';
 import api from '../../Utils/api';
-
 
 const styles = StyleSheet.create({
   container: {
@@ -40,8 +40,9 @@ class Categories extends Component {
     api.getQuizzList(category)
       .then((quizzList) => {
         console.log(quizzList);
+        const quizz = sample(quizzList);
         this.props.navigator.push(
-          Router.getRoute('quizz', { category, quizzList }),
+          Router.getRoute('quizz', { category, quizz }),
         );
       },
     );

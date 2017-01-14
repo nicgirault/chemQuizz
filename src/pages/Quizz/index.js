@@ -2,11 +2,39 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
 import { Page } from 'chemQuizz/src/components';
-import { map, sample, omit } from 'lodash';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    justifyContent: 'space-around',
+    margin: 10,
+  },
+  questionContainer: {
+    backgroundColor: '#B2EBF0',
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 4,
+    margin: 10,
+  },
+  answersContainer: {
+    flex: 3,
+    justifyContent: 'space-around',
+  },
+  answersRowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flex: 1,
+  },
+  answerContainer: {
+    margin: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    flex: 1,
+  },
+  answerLabel: {
+    color: '#FAFAFA',
   },
 });
 
@@ -15,55 +43,79 @@ type PropsType = {
 };
 
 @withNavigation
-class Categories extends Component {
+class Quizz extends Component {
   static route = {
     navigationBar: {
-      title: 'Quizz'
+      title: 'Quizz',
     },
   };
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedIndex: null,
+    };
+  }
   props: PropsType;
 
   submitAnswerBuilder(correctAnswer) {
     return (answerKey) => {
-      const result = (answerKey !== correctAnswer) ? 'Failed' : 'YAY'
-      console.log(result);
-    }
+      this.setState({ selectedIndex: answerKey });
+      if (answerKey !== correctAnswer) {
+        console.log('coucou');
+      } else {
+        console.log('coucou');
+      }
+    };
+  }
+
+  answersGridBuilder() {
+    return [[{}, {}], [{}, {}]];
   }
 
   render() {
-    const quizz = sample(this.props.route.params.quizzList);
-    const { correct, ...allAnswers } = quizz;
-    const submitAnswerHandler = this.submitAnswerBuilder(correct);
+    const quizz = this.props.route.params.quizz;
+    const submitAnswerHandler = this.submitAnswerBuilder(quizz.correct);
+    const answersGrid = this.answersGridBuilder();
 
-    const list = map(allAnswers, (answerLabel, answerKey) => {
-      console.log(answerKey);
-      console.log(answerLabel);
-      return(
-        <View key={answerKey}>
-          <View style={styles.rowContainer}>
-            <TouchableHighlight
-              onPress={() => submitAnswerHandler(answerKey)}
-              underlayColor='transparent'
-            >
-              <Text style={styles.categoryName}>{answerLabel}</Text>
-            </TouchableHighlight>
-          </View>
-        </View>
-      )
-    });
     return (
-      <Page>
+      <Page noNavBar noMargin>
         <View style={styles.container}>
-          {list}
+          <View style={styles.questionContainer}>
+            <Text>{quizz.question}</Text>
+          </View>
+          <View style={styles.answersContainer}>
+            {answersGrid.map((answersRow, rowIndex) => (
+              <View key={rowIndex} style={styles.answersRowContainer}>
+                {answersRow.map((answer, answerIndex) => {
+                  const globalAnswerIndex = (answersRow.length * rowIndex) + answerIndex;
+                  const selectColor = globalAnswerIndex === quizz.correct ? '#05A5D1' : '#D1A505'
+                  return (
+                    <TouchableHighlight
+                      key={answerIndex}
+                      style={[
+                        styles.answerContainer,
+                        this.state.selectedIndex === globalAnswerIndex ?
+                        { backgroundColor: selectColor } :
+                        { backgroundColor: '#131313' }
+                      ]}
+                      onPress={() => submitAnswerHandler(globalAnswerIndex)}
+                    >
+                      <Text style={styles.answerLabel}>{quizz.answers[globalAnswerIndex]}</Text>
+                    </TouchableHighlight>
+                  );
+                })}
+              </View>
+            ))}
+          </View>
         </View>
       </Page>
     );
   }
  }
 
-Categories.propTypes = {
+Quizz.propTypes = {
   category: React.PropTypes.string.isRequired,
-  quizzList: React.PropTypes.object.isRequired
+  quizz: React.PropTypes.object.isRequired
 };
 
-export default Categories;
+export default Quizz;
