@@ -8,18 +8,18 @@ import api from '../../Utils/api';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   rowContainer: {
     flexDirection: 'column',
     flex: 1,
     padding: 10,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   categoryName: {
     color: '#48BBEC',
     fontSize: 18,
-    paddingBottom: 5
+    paddingBottom: 5,
   },
 });
 
@@ -31,39 +31,37 @@ type PropsType = {
 class Categories extends Component {
   static route = {
     navigationBar: {
-      title: 'Catégories'
+      title: 'Catégories',
     },
   };
   props: PropsType;
 
-  launchQuizz(category){
+  launchQuizz(category) {
     api.getQuizzList(category)
       .then((quizzList) => {
         console.log(quizzList);
         this.props.navigator.push(
-          Router.getRoute('quizz', {category, quizzList})
+          Router.getRoute('quizz', { category, quizzList }),
         );
-      }
-    )
+      },
+    );
   }
 
   render() {
     const categories = this.props.route.params.categories;
-    const list = categories.map((category, index) => {
-      return(
-        <View key={index}>
-          <View style={styles.rowContainer}>
-            <TouchableHighlight
-              onPress={() => this.launchQuizz(category)}
-              underlayColor='transparent'
-            >
-              <Text style={styles.categoryName}>{category}</Text>
-            </TouchableHighlight>
-          </View>
-          <Separator />
+    const list = categories.map((category, index) =>
+      <View key={index}>
+        <View style={styles.rowContainer}>
+          <TouchableHighlight
+            onPress={() => this.launchQuizz(category)}
+            underlayColor="transparent"
+          >
+            <Text style={styles.categoryName}>{category}</Text>
+          </TouchableHighlight>
         </View>
-      )
-    });
+        <Separator />
+      </View>
+    );
     return (
       <Page>
         <ScrollView style={styles.container}>
@@ -75,7 +73,7 @@ class Categories extends Component {
  }
 
 Categories.propTypes = {
-  categories: React.PropTypes.array.isRequired
+  categories: React.PropTypes.array.isRequired,
 };
 
 export default Categories;
