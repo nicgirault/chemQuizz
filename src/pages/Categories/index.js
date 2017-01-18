@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableHighlight } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
 import Router from 'chemQuizz/src/Router.js';
-import { Page, Separator } from 'chemQuizz/src/components';
+import { Page } from 'chemQuizz/src/components';
 import { inject } from 'mobx-react/native';
 import api from '../../Utils/api';
 
@@ -15,11 +15,14 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     alignItems: 'center',
+    marginTop: 5,
+    borderRadius: 5,
   },
   categoryName: {
-    color: '#48BBEC',
+    color: '#FFFFFF',
     fontSize: 18,
     paddingBottom: 5,
+    fontWeight: 'bold',
   },
 });
 
@@ -44,7 +47,7 @@ class Categories extends Component {
   props: PropsType;
 
   launchQuizz(category) {
-    api.getQuizzList(category)
+    api.getQuizzList(category.name)
       .then((quizzList) => {
         this.props.fetchQuizzList(quizzList);
         this.props.navigator.push(
@@ -58,19 +61,18 @@ class Categories extends Component {
     const categories = this.props.route.params.categories;
     const list = categories.map((category, index) =>
       <View key={index}>
-        <View style={styles.rowContainer}>
+        <View style={[styles.rowContainer,{ backgroundColor: category.color}]}>
           <TouchableHighlight
             onPress={() => this.launchQuizz(category)}
             underlayColor="transparent"
           >
-            <Text style={styles.categoryName}>{category}</Text>
+            <Text style={styles.categoryName}>{category.name}</Text>
           </TouchableHighlight>
         </View>
-        <Separator />
       </View>,
     );
     return (
-      <Page>
+      <Page noNavBar>
         <ScrollView style={styles.container}>
           {list}
         </ScrollView>

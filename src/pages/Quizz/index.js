@@ -4,6 +4,8 @@ import { withNavigation } from '@exponent/ex-navigation';
 import { Page } from 'chemQuizz/src/components';
 import { inject, observer } from 'mobx-react/native';
 
+import appStyle from 'chemQuizz/src/appStyle';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -11,12 +13,16 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   questionContainer: {
-    backgroundColor: '#B2EBF0',
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
     flex: 4,
     margin: 10,
+  },
+  questionText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   answersContainer: {
     flex: 3,
@@ -36,9 +42,10 @@ const styles = StyleSheet.create({
   },
   answerLabel: {
     color: '#FAFAFA',
+    fontWeight: 'bold',
   },
   quizzIsOverMessage: {
-    backgroundColor: '#B2EBF0',
+    flex: 1,
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -91,7 +98,7 @@ class Quizz extends Component {
     return (answerKey) => {
       this.setState({ selectedIndex: answerKey });
       if (answerKey === correctAnswer) {
-        setTimeout(() => this.navigateToNextQuizz(), 1000);
+        setTimeout(() => this.navigateToNextQuizz(), 500);
       }
     };
   }
@@ -101,6 +108,7 @@ class Quizz extends Component {
   }
 
   render() {
+    const category = this.props.route.params.category;
     const quizz = this.props.quizz;
     const submitAnswerHandler = this.submitAnswerBuilder(quizz.correct);
     const answersGrid = this.answersGridBuilder();
@@ -109,15 +117,15 @@ class Quizz extends Component {
       <Page noNavBar noMargin>
         { !this.props.listIsEmpty &&
           <View style={styles.container}>
-            <View style={styles.questionContainer}>
-              <Text>{quizz.question}</Text>
+            <View style={[styles.questionContainer, {backgroundColor: category.color}]}>
+              <Text style={styles.questionText}>{quizz.question}</Text>
             </View>
             <View style={styles.answersContainer}>
               {answersGrid.map((answersRow, rowIndex) => (
                 <View key={rowIndex} style={styles.answersRowContainer}>
                   {answersRow.map((answer, answerIndex) => {
                     const globalAnswerIndex = (answersRow.length * rowIndex) + answerIndex;
-                    const selectColor = globalAnswerIndex === quizz.correct ? '#05A5D1' : '#D1A505';
+                    const selectColor = globalAnswerIndex === quizz.correct ? appStyle.colors.primary : '#F69F36';
                     return (
                       <TouchableHighlight
                         key={answerIndex}
@@ -139,8 +147,8 @@ class Quizz extends Component {
           </View>
         }
         {this.props.listIsEmpty &&
-          <View style={styles.quizzIsOverMessage}>
-            <Text>You finished all the quizz for this category!</Text>
+          <View style={[styles.quizzIsOverMessage, {backgroundColor: category.color}]}>
+            <Text style={styles.questionText}>Catégorie {category.name} terminée!</Text>
           </View>
         }
       </Page>
@@ -149,7 +157,7 @@ class Quizz extends Component {
  }
 
 Quizz.propTypes = {
-  category: React.PropTypes.string.isRequired,
+  category: React.PropTypes.object.isRequired,
 };
 
 export default Quizz;

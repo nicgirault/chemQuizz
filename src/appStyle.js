@@ -19,8 +19,8 @@ export const appStyle = {
     },
   },
   colors: {
-    primary: '#05A5D1',
-    lightText: '#FAFAFA',
+    primary: '#00CE89',
+    lightText: '#FFFFFF',
     background: '#F5FCFF',
   },
   margins: {

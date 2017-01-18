@@ -16,6 +16,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
+    fontWeight: 'bold',
+  },
+  welcomeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
 });
 
@@ -52,9 +57,17 @@ class Home extends Component {
     return (
       <Page>
         <View style={styles.container}>
-          <Text style={styles.welcome}>
-            Bienvenue sur chemQuizz!
-          </Text>
+          <View style={styles.welcomeContainer}>
+            <Text style={[styles.welcome, {color: '#DF1A25'}]}>B</Text>
+            <Text style={[styles.welcome, {color: '#47FAD1'}]}>I</Text>
+            <Text style={[styles.welcome, {color: '#FAD147'}]}>E</Text>
+            <Text style={[styles.welcome, {color: '#DF1A25'}]}>N</Text>
+            <Text style={[styles.welcome, {color: '#47FAD1'}]}>V</Text>
+            <Text style={[styles.welcome, {color: '#FAD147'}]}>E</Text>
+            <Text style={[styles.welcome, {color: '#DF1A25'}]}>N</Text>
+            <Text style={[styles.welcome, {color: '#47FAD1'}]}>U</Text>
+            <Text style={[styles.welcome, {color: '#FAD147'}]}>E</Text>
+          </View>
           <Button onPress={this.goToCategories}>Jouer !</Button>
         </View>
       </Page>

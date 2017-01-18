@@ -16,11 +16,13 @@ const styles = StyleSheet.create({
     height: appStyle.dimensions.visibleButtonHeight,
     backgroundColor: appStyle.colors.primary,
     paddingHorizontal: appStyle.margins.inner,
+    borderRadius: 5,
   },
   text: {
     textAlign: 'center',
     color: appStyle.colors.lightText,
-    fontSize: appStyle.font.fontSize.default,
+    fontSize: appStyle.font.fontSize.huge,
+    fontWeight: 'bold',
   },
 });
 
