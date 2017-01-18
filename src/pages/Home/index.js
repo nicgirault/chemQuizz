@@ -21,6 +21,11 @@ const styles = StyleSheet.create({
 
 type PropsType = {
   navigator: any,
+  quizz: {
+    answers: array,
+    correct: string,
+    question: string,
+  }
 };
 
 @withNavigation

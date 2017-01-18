@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ScrollView, TouchableHighlight } from 'react-na
 import { withNavigation } from '@exponent/ex-navigation';
 import Router from 'chemQuizz/src/Router.js';
 import { Page, Separator } from 'chemQuizz/src/components';
-import { sample } from 'lodash';
+import { inject } from 'mobx-react/native';
 import api from '../../Utils/api';
 
 const styles = StyleSheet.create({
@@ -24,10 +24,17 @@ const styles = StyleSheet.create({
 });
 
 type PropsType = {
-  navigator: any
+  navigator: any,
+  fetchQuizzList: () => void,
 };
 
 @withNavigation
+@inject((allStores) => {
+  const quizzStore = allStores.quizzStore;
+  return {
+    fetchQuizzList: quizzList => quizzStore.fetchQuizzList(quizzList),
+  };
+})
 class Categories extends Component {
   static route = {
     navigationBar: {
@@ -39,10 +46,9 @@ class Categories extends Component {
   launchQuizz(category) {
     api.getQuizzList(category)
       .then((quizzList) => {
-        console.log(quizzList);
-        const quizz = sample(quizzList);
+        this.props.fetchQuizzList(quizzList);
         this.props.navigator.push(
-          Router.getRoute('quizz', { category, quizz }),
+          Router.getRoute('quizz', { category }),
         );
       },
     );
@@ -61,7 +67,7 @@ class Categories extends Component {
           </TouchableHighlight>
         </View>
         <Separator />
-      </View>
+      </View>,
     );
     return (
       <Page>
