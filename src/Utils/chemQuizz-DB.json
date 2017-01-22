@@ -1,0 +1,45 @@
+{
+  "Atome" : [ {
+    "answers" : [ "Électrons", "Protons", "Nucléons", "Neutrons" ],
+    "correct" : [ 1 ],
+    "question" : "Dans l'atome, les particules du noyau chargées positivement sont appelées des",
+    "type" : "oneOverFour"
+  }, {
+    "answers" : [ "Électrons", "Protons", "Noyau", "Neutrons" ],
+    "correct" : [ 1, 2 ],
+    "question" : "Sont chargés positivement dans l'atome",
+    "type" : "manyOverFour"
+  } ],
+  "La pile" : [ {
+    "answers" : [ "Pile 1", "Pile 2", "Pile 3", "Pile 4" ],
+    "correct" : [ 2 ],
+    "question" : "Quelle est la bonne pile",
+    "type" : "oneOverFour"
+  } ],
+  "Mécanique" : [ {
+    "answers" : [ "answer1", "answer2", "answer3", "answer4" ],
+    "correct" : [ 3 ],
+    "question" : "La question 1",
+    "type" : "oneOverFour"
+  }, {
+    "answers" : [ "12 ans", "26 ans", "32 ans", "45 ans" ],
+    "correct" : [ 1 ],
+    "question" : "Quel âge as tu ?",
+    "type" : "oneOverFour"
+  }, {
+    "answers" : [ "Une réponse un peu longue", "Mais en vrai la réponse est la 2", "Bah ouais", "Oh nooooon" ],
+    "correct" : [ 2 ],
+    "question" : "Voici une question un peu longue, mais quelle est la réponse ?",
+    "type" : "oneOverFour"
+  } ],
+  "categories" : [ {
+    "color" : "#DF1A20",
+    "name" : "Mécanique"
+  }, {
+    "color" : "#47FAD1",
+    "name" : "Atome"
+  }, {
+    "color" : "#FAD147",
+    "name" : "La pile"
+  } ]
+}

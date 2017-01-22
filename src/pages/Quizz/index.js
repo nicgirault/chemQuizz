@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
 import { Page } from 'chemQuizz/src/components';
 import { inject, observer } from 'mobx-react/native';
+import { includes, filter, isEqual } from 'lodash';
 
 import appStyle from 'chemQuizz/src/appStyle';
 
@@ -60,7 +61,8 @@ type PropsType = {
   quizz: {
     answers: Array,
     question: string,
-    correct: number,
+    correct: Array,
+    type: string,
   },
 };
 
@@ -83,7 +85,7 @@ class Quizz extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedIndex: null,
+      selectedIndexes: [],
     };
   }
 
@@ -91,15 +93,29 @@ class Quizz extends Component {
 
   navigateToNextQuizz() {
     this.props.getNextQuizz();
-    this.setState({ selectedIndex: null });
+    this.setState({
+      selectedIndexes: [],
+    });
   }
 
-  submitAnswerBuilder(correctAnswer) {
+  clearSelectedIndexes(cb) {
+    const clearedSelectedIndexes = filter(this.state.selectedIndexes, (index) => {
+      return includes(this.props.quizz.correct, index);
+    })
+    this.setState({ selectedIndexes: clearedSelectedIndexes }, cb);
+  }
+
+  submitAnswerBuilder(quizz) {
     return (answerKey) => {
-      this.setState({ selectedIndex: answerKey });
-      if (answerKey === correctAnswer) {
-        setTimeout(() => this.navigateToNextQuizz(), 500);
-      }
+      this.clearSelectedIndexes(() => {
+        if (!includes(this.state.selectedIndexes, answerKey)) {
+          this.setState({ selectedIndexes: this.state.selectedIndexes.concat([answerKey]) }, () => {
+            if (isEqual(this.state.selectedIndexes.sort(), quizz.correct.slice())) {
+              setTimeout(() => this.navigateToNextQuizz(), 500);
+            }
+          })
+        }
+      });
     };
   }
 
@@ -110,7 +126,7 @@ class Quizz extends Component {
   render() {
     const category = this.props.route.params.category;
     const quizz = this.props.quizz;
-    const submitAnswerHandler = this.submitAnswerBuilder(quizz.correct);
+    const submitAnswerHandler = this.submitAnswerBuilder(quizz);
     const answersGrid = this.answersGridBuilder();
 
     return (
@@ -125,13 +141,13 @@ class Quizz extends Component {
                 <View key={rowIndex} style={styles.answersRowContainer}>
                   {answersRow.map((answer, answerIndex) => {
                     const globalAnswerIndex = (answersRow.length * rowIndex) + answerIndex;
-                    const selectColor = globalAnswerIndex === quizz.correct ? appStyle.colors.primary : '#F69F36';
+                    const selectColor = includes(quizz.correct, globalAnswerIndex) ? appStyle.colors.primary : '#F69F36';
                     return (
                       <TouchableHighlight
                         key={answerIndex}
                         style={[
                           styles.answerContainer,
-                          this.state.selectedIndex === globalAnswerIndex ?
+                          includes(this.state.selectedIndexes, globalAnswerIndex) ?
                           { backgroundColor: selectColor } :
                           { backgroundColor: '#131313' },
                         ]}
