@@ -14,6 +14,7 @@ export default class QuizzStore {
     const processedFetchedQuizzList = values(fetchedQuizzList)
     this.quizzList.length = 0;
     this.quizzList.push(...processedFetchedQuizzList);
+    this.listIsEmpty = !(this.quizzList.length > 0);
   }
 
   @action updateSelectedQuizz(index) {
