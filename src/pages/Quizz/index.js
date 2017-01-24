@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 4,
     margin: 10,
+    padding: 10,
   },
   questionText: {
     color: '#FFFFFF',
