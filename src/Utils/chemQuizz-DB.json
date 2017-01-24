@@ -9,6 +9,11 @@
     "correct" : [ 1, 2 ],
     "question" : "Sont chargés positivement dans l'atome",
     "type" : "manyOverFour"
+  }, {
+    "answers" : [ "Molécule", "Humain", "Planète", "Atome" ],
+    "correct" : [ 2, 1, 0, 3 ],
+    "question" : "Classer ces objets du plus grand au plus petit",
+    "type" : "sortOverFour"
   } ],
   "La pile" : [ {
     "answers" : [ "Pile 1", "Pile 2", "Pile 3", "Pile 4" ],

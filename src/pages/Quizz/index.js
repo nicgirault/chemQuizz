@@ -99,8 +99,11 @@ class Quizz extends Component {
   }
 
   clearSelectedIndexes(cb) {
-    const clearedSelectedIndexes = filter(this.state.selectedIndexes, (index) => {
-      return includes(this.props.quizz.correct, index);
+    const clearedSelectedIndexes = filter(this.state.selectedIndexes, (value, index) => {
+      const filter = this.props.quizz.type === 'sortOverFour' ?
+        (this.state.selectedIndexes[index] === this.props.quizz.correct[index]) :
+        includes(this.props.quizz.correct, value);
+      return filter;
     })
     this.setState({ selectedIndexes: clearedSelectedIndexes }, cb);
   }
@@ -110,7 +113,8 @@ class Quizz extends Component {
       this.clearSelectedIndexes(() => {
         if (!includes(this.state.selectedIndexes, answerKey)) {
           this.setState({ selectedIndexes: this.state.selectedIndexes.concat([answerKey]) }, () => {
-            if (isEqual(this.state.selectedIndexes.sort(), quizz.correct.slice())) {
+            const validationList = quizz.type === 'sortOverFour' ? this.state.selectedIndexes : this.state.selectedIndexes.sort();
+            if (isEqual(validationList, quizz.correct.slice())) {
               setTimeout(() => this.navigateToNextQuizz(), 500);
             }
           })
@@ -121,6 +125,26 @@ class Quizz extends Component {
 
   answersGridBuilder() {
     return [[{}, {}], [{}, {}]];
+  }
+
+  getBackgroundColor(quizz, index) {
+    if (includes(this.state.selectedIndexes, index)) {
+      let sortOverFourCondition = true;
+      this.state.selectedIndexes.forEach((value, loopIndex) => {
+        if (value === index && value !== quizz.correct.slice()[loopIndex]) {
+          sortOverFourCondition = false;
+        }
+      });
+      if (quizz.type !== 'sortOverFour' && includes(quizz.correct, index)) {
+        return { backgroundColor: appStyle.colors.primary };
+      } else if (quizz.type === 'sortOverFour' && sortOverFourCondition) {
+        return { backgroundColor: appStyle.colors.primary };
+      } else {
+        return { backgroundColor: '#F69F36' };
+      }
+    } else {
+      return { backgroundColor: '#131313' };
+    }
   }
 
   render() {
@@ -141,15 +165,12 @@ class Quizz extends Component {
                 <View key={rowIndex} style={styles.answersRowContainer}>
                   {answersRow.map((answer, answerIndex) => {
                     const globalAnswerIndex = (answersRow.length * rowIndex) + answerIndex;
-                    const selectColor = includes(quizz.correct, globalAnswerIndex) ? appStyle.colors.primary : '#F69F36';
                     return (
                       <TouchableHighlight
                         key={answerIndex}
                         style={[
                           styles.answerContainer,
-                          includes(this.state.selectedIndexes, globalAnswerIndex) ?
-                          { backgroundColor: selectColor } :
-                          { backgroundColor: '#131313' },
+                          this.getBackgroundColor(quizz, globalAnswerIndex),
                         ]}
                         onPress={() => submitAnswerHandler(globalAnswerIndex)}
                       >
