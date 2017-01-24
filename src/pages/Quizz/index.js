@@ -58,7 +58,9 @@ const styles = StyleSheet.create({
 type PropsType = {
   navigator: any,
   getNextQuizz: () => void,
+  addError: () => void,
   listIsEmpty: boolean,
+  errorCount: number,
   quizz: {
     answers: Array,
     question: string,
@@ -73,7 +75,9 @@ type PropsType = {
   return {
     quizz: quizzStore.selectedQuizz,
     listIsEmpty: quizzStore.listIsEmpty,
+    errorCount: quizzStore.errorCount,
     getNextQuizz: () => quizzStore.getNextQuizz(),
+    addError: () => quizzStore.addError(),
   };
 })
 @observer
@@ -109,11 +113,21 @@ class Quizz extends Component {
     this.setState({ selectedIndexes: clearedSelectedIndexes }, cb);
   }
 
+  handleError(answerKey) {
+    const isError = this.props.quizz.type === 'sortOverFour' ?
+      (answerKey !== this.props.quizz.correct[this.state.selectedIndexes.length - 1]) :
+      !includes(this.props.quizz.correct, answerKey);
+    if (isError) {
+      this.props.addError();
+    }
+  }
+
   submitAnswerBuilder(quizz) {
     return (answerKey) => {
       this.clearSelectedIndexes(() => {
         if (!includes(this.state.selectedIndexes, answerKey)) {
           this.setState({ selectedIndexes: this.state.selectedIndexes.concat([answerKey]) }, () => {
+            this.handleError(answerKey);
             const validationList = quizz.type === 'sortOverFour' ? this.state.selectedIndexes : this.state.selectedIndexes.sort();
             if (isEqual(validationList, quizz.correct.slice())) {
               setTimeout(() => this.navigateToNextQuizz(), 500);
@@ -156,7 +170,7 @@ class Quizz extends Component {
 
     return (
       <Page noNavBar noMargin>
-        { !this.props.listIsEmpty &&
+        { !this.props.listIsEmpty && this.props.errorCount < 3 &&
           <View style={styles.container}>
             <View style={[styles.questionContainer, {backgroundColor: category.color}]}>
               <Text style={styles.questionText}>{quizz.question}</Text>
@@ -187,6 +201,11 @@ class Quizz extends Component {
         {this.props.listIsEmpty &&
           <View style={[styles.quizzIsOverMessage, {backgroundColor: category.color}]}>
             <Text style={styles.questionText}>Catégorie {category.name} terminée!</Text>
+          </View>
+        }
+        {this.props.errorCount === 3 &&
+          <View style={[styles.quizzIsOverMessage, {backgroundColor: category.color}]}>
+            <Text style={styles.questionText}>Vous avez fait trois erreurs ! Réessayez ! :) </Text>
           </View>
         }
       </Page>

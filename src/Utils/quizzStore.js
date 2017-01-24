@@ -5,9 +5,18 @@ export default class QuizzStore {
   @observable quizzList = [];
   @observable selectedQuizz = {};
   @observable listIsEmpty = false;
+  @observable errorCount = 0;
 
   @action dispatchListIsEmpty() {
     this.listIsEmpty = true;
+  }
+
+  @action addError() {
+    this.errorCount++;
+  }
+
+  @action resetErrorCount() {
+    this.errorCount = 0;
   }
 
   @action updateQuizzList(fetchedQuizzList) {
@@ -42,6 +51,7 @@ export default class QuizzStore {
 
   fetchQuizzList(quizzList) {
     this.updateQuizzList(quizzList);
+    this.resetErrorCount();
     this.selectRandomQuizz();
   }
 }
