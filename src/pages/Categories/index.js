@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
 import Router from 'chemQuizz/src/Router.js';
 import { Page } from 'chemQuizz/src/components';
@@ -61,14 +61,12 @@ class Categories extends Component {
     const categories = this.props.route.params.categories;
     const list = categories.map((category, index) =>
       <View key={index}>
-        <View style={[styles.rowContainer,{ backgroundColor: category.color}]}>
-          <TouchableHighlight
-            onPress={() => this.launchQuizz(category)}
-            underlayColor="transparent"
-          >
-            <Text style={styles.categoryName}>{category.name}</Text>
-          </TouchableHighlight>
-        </View>
+        <TouchableOpacity
+          style={[styles.rowContainer,{ backgroundColor: category.color}]}
+          onPress={() => this.launchQuizz(category)}
+        >
+          <Text style={styles.categoryName}>{category.name}</Text>
+        </TouchableOpacity>
       </View>,
     );
     return (
