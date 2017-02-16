@@ -5,6 +5,11 @@
     "question" : "Dans l'atome, les particules du noyau chargées positivement sont appelées des",
     "type" : "oneOverFour"
   }, {
+    "answers" : [ "Oui", "Non", "Bolosss", "C'est le meilleur" ],
+    "correct" : [ 0, 3 ],
+    "question" : "Martin est il sympa ?",
+    "type" : "manyOverFour"
+  }, {
     "answers" : [ "Électrons", "Protons", "Noyau", "Neutrons" ],
     "correct" : [ 1, 2 ],
     "question" : "Sont chargés positivement dans l'atome",

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { NavigationProvider, StackNavigation } from '@exponent/ex-navigation';
-import * as firebase from 'firebase';
+import firebase from 'firebase';
 
 import Router from 'chemQuizz/src/Router.js';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCRgK6uY3CshbZcKvOisboOU3jfUXFWPX",
+  apiKey: "AIzaSyCRgK6uY3CshbZcKvOisboOU3jfUXFWPXA",
   authDomain: "chemquizz-c6ed3.firebaseapp.com",
   databaseURL: "https://chemquizz-c6ed3.firebaseio.com",
   storageBucket: "chemquizz-c6ed3.appspot.com",

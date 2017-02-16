@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
 import api from '../../Utils/api';
+import { inject, observer } from 'mobx-react/native';
 
 import Router from 'chemQuizz/src/Router.js';
 import { Page, Button } from 'chemQuizz/src/components';
@@ -26,6 +27,10 @@ const styles = StyleSheet.create({
 
 type PropsType = {
   navigator: any,
+  currentUser: {
+    id: string,
+    email: string,
+  },
   quizz: {
     answers: array,
     correct: string,
@@ -34,6 +39,13 @@ type PropsType = {
 };
 
 @withNavigation
+@inject((allStores) => {
+  const currentUserStore = allStores.currentUserStore;
+  return {
+    currentUser: currentUserStore.currentUser,
+  };
+})
+@observer
 class Home extends Component {
   static route = {
     navigationBar: {
@@ -49,6 +61,12 @@ class Home extends Component {
         );
       }
     )
+  }
+
+  goToLogIn = () => {
+    this.props.navigator.push(
+      Router.getRoute('login')
+    );
   }
 
   props: PropsType;
@@ -68,7 +86,15 @@ class Home extends Component {
             <Text style={[styles.welcome, {color: '#47FAD1'}]}>U</Text>
             <Text style={[styles.welcome, {color: '#FAD147'}]}>E</Text>
           </View>
-          <Button onPress={this.goToCategories}>Jouer !</Button>
+          { !!this.props.currentUser.email &&
+            <Text style={styles.welcome}>Vous êtes connecté en tant que {this.props.currentUser.email}</Text>
+          }
+          { !!this.props.currentUser.id &&
+            <Button onPress={this.goToCategories}>Jouer !</Button>
+          }
+          { !this.props.currentUser.id &&
+            <Button onPress={this.goToLogIn}>Connectez vous !</Button>
+          }
         </View>
       </Page>
     );
