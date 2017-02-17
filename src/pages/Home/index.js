@@ -35,7 +35,8 @@ type PropsType = {
     answers: array,
     correct: string,
     question: string,
-  }
+  },
+  logOut: any,
 };
 
 @withNavigation
@@ -43,6 +44,7 @@ type PropsType = {
   const currentUserStore = allStores.currentUserStore;
   return {
     currentUser: currentUserStore.currentUser,
+    logOut: () => currentUserStore.logOut(),
   };
 })
 @observer
@@ -54,13 +56,17 @@ class Home extends Component {
   }
 
   goToCategories = () => {
-    api.getCategories()
-      .then((categories) => {
-        this.props.navigator.push(
-          Router.getRoute('categories', {categories})
-        );
-      }
-    )
+    if(!this.props.currentUser.id) {
+      this.goToLogIn();
+    } else {
+      api.getCategories()
+        .then((categories) => {
+          this.props.navigator.push(
+            Router.getRoute('categories', {categories})
+          );
+        }
+      )
+    }
   }
 
   goToLogIn = () => {
@@ -86,14 +92,12 @@ class Home extends Component {
             <Text style={[styles.welcome, {color: '#47FAD1'}]}>U</Text>
             <Text style={[styles.welcome, {color: '#FAD147'}]}>E</Text>
           </View>
+          <Button onPress={this.goToCategories}>Jouer !</Button>
           { !!this.props.currentUser.email &&
-            <Text style={styles.welcome}>Vous êtes connecté en tant que {this.props.currentUser.email}</Text>
-          }
-          { !!this.props.currentUser.id &&
-            <Button onPress={this.goToCategories}>Jouer !</Button>
-          }
-          { !this.props.currentUser.id &&
-            <Button onPress={this.goToLogIn}>Connectez vous !</Button>
+            <View>
+              <Text style={styles.welcome}>Vous êtes connecté en tant que {this.props.currentUser.email}</Text>
+              <Button onPress={() => this.props.logOut()}>Se déconnecter</Button>
+            </View>
           }
         </View>
       </Page>

@@ -4,6 +4,7 @@ import { inject, observer } from 'mobx-react/native';
 
 import { withNavigation } from '@exponent/ex-navigation';
 
+import api from '../../Utils/api';
 import Router from 'chemQuizz/src/Router.js';
 import { Page, Button } from 'chemQuizz/src/components';
 
@@ -46,7 +47,14 @@ class LogIn extends Component {
     this.props.logUser({
       email: this.state.email,
       password: this.state.password,
-    })
+    });
+    api.getCategories()
+      .then((categories) => {
+        this.props.navigator.replace(
+          Router.getRoute('categories', {categories})
+        );
+      }
+    )
   }
 
   goToSignUp = () => {

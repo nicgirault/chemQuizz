@@ -29,11 +29,18 @@ export default class CurrentUserStore {
     .then((loggedUser) => {
       AsyncStorage.setItem(this.USERID_STORAGE_KEY, loggedUser.uid);
       AsyncStorage.setItem(this.USEREMAIL_STORAGE_KEY, loggedUser.email);
+      this.currentUser = {
+        id: loggedUser.uid,
+        email: loggedUser.email,
+      }
     })
     .catch(error => console.log('ERROR', error.message))
   }
 
-  @action logout() {
+  @action logOut() {
+    console.log('coucou');
     AsyncStorage.removeItem(this.USERID_STORAGE_KEY);
+    AsyncStorage.removeItem(this.USEREMAIL_STORAGE_KEY);
+    this.currentUser = this.getEmptyUser();
   }
 }
