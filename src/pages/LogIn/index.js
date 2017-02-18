@@ -6,13 +6,19 @@ import { withNavigation } from '@exponent/ex-navigation';
 
 import api from '../../Utils/api';
 import Router from 'chemQuizz/src/Router.js';
-import { Page, Button } from 'chemQuizz/src/components';
+import { Page, Button, Separator } from 'chemQuizz/src/components';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-around',
     alignItems: 'center',
+  },
+  textInput: {
+    height: 40,
+    borderColor: 'lightgray',
+    borderWidth: 1,
+    padding: 4
   },
 });
 
@@ -70,7 +76,7 @@ class LogIn extends Component {
       <Page>
         <View style={styles.container}>
           <TextInput
-            style={{height: 40, borderColor: 'lightgray', borderWidth: 1, padding: 4}}
+            style={styles.textInput}
             autoFocus
             keyboardType='email-address'
             placeholder='Email address'
@@ -78,13 +84,14 @@ class LogIn extends Component {
             value={this.state.email}
           />
           <TextInput
-            style={{height: 40, borderColor: 'lightgray', borderWidth: 1, padding: 4}}
+            style={styles.textInput}
             placeholder='Password'
             onChangeText={(password) => this.setState({password})}
             value={this.state.password}
           />
-          <Button onPress={this.logIn}>Connection !</Button>
-          <Button onPress={this.goToSignUp}>S&apos;incrire !</Button>
+          <Button onPress={this.logIn}>Connexion !</Button>
+          <Separator text="ou" />
+          <Button onPress={this.goToSignUp} type="outline">S&apos;incrire</Button>
         </View>
       </Page>
     );

@@ -6,11 +6,12 @@ import { inject, observer } from 'mobx-react/native';
 
 import Router from 'chemQuizz/src/Router.js';
 import { Page, Button } from 'chemQuizz/src/components';
+import appStyle from 'chemQuizz/src/appStyle';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
+    justifyContent: 'space-around',
     alignItems: 'center',
   },
   welcome: {
@@ -18,6 +19,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 10,
     fontWeight: 'bold',
+  },
+  disconnect: {
+    fontSize: 12,
+    textAlign: 'center',
+    margin: 10,
+    fontWeight: 'bold',
+    color: appStyle.colors.lightText,
   },
   welcomeContainer: {
     flexDirection: 'row',
@@ -95,8 +103,8 @@ class Home extends Component {
           <Button onPress={this.goToCategories}>Jouer !</Button>
           { !!this.props.currentUser.email &&
             <View>
-              <Text style={styles.welcome}>Vous êtes connecté en tant que {this.props.currentUser.email}</Text>
-              <Button onPress={() => this.props.logOut()}>Se déconnecter</Button>
+              <Text style={styles.disconnect}>Vous êtes connecté en tant que {this.props.currentUser.email}</Text>
+              <Button onPress={() => this.props.logOut()} type='outline'>Se déconnecter</Button>
             </View>
           }
         </View>

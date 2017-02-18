@@ -38,7 +38,6 @@ export default class CurrentUserStore {
   }
 
   @action logOut() {
-    console.log('coucou');
     AsyncStorage.removeItem(this.USERID_STORAGE_KEY);
     AsyncStorage.removeItem(this.USEREMAIL_STORAGE_KEY);
     this.currentUser = this.getEmptyUser();

@@ -1,3 +1,4 @@
+import { inject, observer } from 'mobx-react/native';
 import React, { Component } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
@@ -16,9 +17,16 @@ const styles = StyleSheet.create({
 
 type PropsType = {
   navigator: any,
+  logUser: () => void,
 };
 
 @withNavigation
+@inject((allStores) => {
+  const currentUserStore = allStores.currentUserStore;
+  return {
+    logUser: accountData => currentUserStore.logUser(accountData),
+  };
+})
 class SignUp extends Component {
   static route = {
     navigationBar: {
@@ -36,8 +44,16 @@ class SignUp extends Component {
 
   signUp = () => {
     firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-    .then(res => console.log(res))
+    .then(() => this.logIn())
     .catch(e => console.log(e.message))
+  }
+
+  logIn = () => {
+    this.props.logUser({
+      email: this.state.email,
+      password: this.state.password,
+    });
+    this.props.navigator.pop(2);
   }
 
   props: PropsType;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
-import { Page } from 'chemQuizz/src/components';
+import { Page, LifeCount } from 'chemQuizz/src/components';
 import { inject, observer } from 'mobx-react/native';
 import { includes, filter, isEqual } from 'lodash';
 
@@ -12,6 +12,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     margin: 10,
+  },
+  lifeCountContainer: {
+    flex: 0,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginHorizontal: 10,
   },
   questionContainer: {
     borderRadius: 5,
@@ -172,6 +178,9 @@ class Quizz extends Component {
       <Page noNavBar noMargin>
         { !this.props.listIsEmpty && this.props.errorCount < 3 &&
           <View style={styles.container}>
+            <View style={styles.lifeCountContainer}>
+              <LifeCount />
+            </View>
             <View style={[styles.questionContainer, {backgroundColor: category.color}]}>
               <Text style={styles.questionText}>{quizz.question}</Text>
             </View>
