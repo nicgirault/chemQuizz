@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { inject, observer } from 'mobx-react/native';
+import { observe } from 'mobx';
 
 import { withNavigation } from '@exponent/ex-navigation';
 
 import api from '../../Utils/api';
 import Router from 'chemQuizz/src/Router.js';
 import { Page, Button, Separator } from 'chemQuizz/src/components';
+
+import appStyle from 'chemQuizz/src/appStyle';
 
 const styles = StyleSheet.create({
   container: {
@@ -20,11 +23,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 4
   },
+  errorMessage: {
+    color: appStyle.colors.errorMessage
+  },
 });
 
 type PropsType = {
   navigator: any,
   logUser: () => void,
+  currentUser: any,
+  logError: any,
 };
 
 @withNavigation
@@ -32,8 +40,11 @@ type PropsType = {
   const currentUserStore = allStores.currentUserStore;
   return {
     logUser: accountData => currentUserStore.logUser(accountData),
+    currentUser: currentUserStore.currentUser,
+    logError: currentUserStore.logError,
   };
 })
+@observer
 class LogIn extends Component {
   static route = {
     navigationBar: {
@@ -47,6 +58,11 @@ class LogIn extends Component {
       email: '',
       password: '',
     };
+
+    observe(props.currentUser, 'id', (change) => {
+      api.getCategories()
+        .then(categories => this.props.navigator.replace(Router.getRoute('categories', {categories})))
+    });
   }
 
   logIn = () => {
@@ -54,13 +70,6 @@ class LogIn extends Component {
       email: this.state.email,
       password: this.state.password,
     });
-    api.getCategories()
-      .then((categories) => {
-        this.props.navigator.replace(
-          Router.getRoute('categories', {categories})
-        );
-      }
-    )
   }
 
   goToSignUp = () => {
@@ -75,6 +84,7 @@ class LogIn extends Component {
     return (
       <Page>
         <View style={styles.container}>
+          { this.props.logError && <Text style={styles.errorMessage}>Combinaison email - mot de passe incorrecte</Text>}
           <TextInput
             style={styles.textInput}
             autoFocus
@@ -97,6 +107,5 @@ class LogIn extends Component {
     );
   }
 }
-
 
 export default LogIn;

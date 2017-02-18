@@ -16,6 +16,7 @@ export default class CurrentUserStore {
   USEREMAIL_STORAGE_KEY = 'USEREMAIL';
 
   @observable currentUser = this.getEmptyUser();
+  @observable logError = null;
 
   getEmptyUser() {
     return {
@@ -29,12 +30,12 @@ export default class CurrentUserStore {
     .then((loggedUser) => {
       AsyncStorage.setItem(this.USERID_STORAGE_KEY, loggedUser.uid);
       AsyncStorage.setItem(this.USEREMAIL_STORAGE_KEY, loggedUser.email);
-      this.currentUser = {
+      extendObservable(this.currentUser, {
         id: loggedUser.uid,
         email: loggedUser.email,
-      }
+      });
     })
-    .catch(error => console.log('ERROR', error.message))
+    .catch(error => this.logError = error)
   }
 
   @action logOut() {

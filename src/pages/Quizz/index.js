@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
   answersContainer: {
     flex: 3,
     justifyContent: 'space-around',
+    padding: 15,
   },
   answersRowContainer: {
     flexDirection: 'row',
