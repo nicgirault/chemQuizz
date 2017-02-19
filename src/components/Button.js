@@ -42,9 +42,13 @@ const styles = StyleSheet.create({
   },
   textStandard: {
     color: appStyle.colors.buttonText,
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   textOutline: {
     color: appStyle.colors.primary,
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   textLink: {
     fontSize: appStyle.font.fontSize.huge,

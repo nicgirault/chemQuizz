@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
 import Router from 'chemQuizz/src/Router.js';
-import { Page } from 'chemQuizz/src/components';
+import { Page, Button } from 'chemQuizz/src/components';
 import { inject } from 'mobx-react/native';
 import api from '../../Utils/api';
 
@@ -24,6 +24,9 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     fontWeight: 'bold',
   },
+  button: {
+    marginHorizontal: 10,
+  },
 });
 
 type PropsType = {
@@ -44,12 +47,22 @@ class Categories extends Component {
       title: 'Catégories',
     },
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+    };
+  }
+
   props: PropsType;
 
   launchQuizz(category) {
+    this.setState({isLoading: true});
     api.getQuizzList(category.name)
       .then((quizzList) => {
         this.props.fetchQuizzList(quizzList);
+        this.setState({isLoading: false});
         this.props.navigator.push(
           Router.getRoute('quizz', { category }),
         );
@@ -61,12 +74,15 @@ class Categories extends Component {
     const categories = this.props.route.params.categories;
     const list = categories.map((category, index) =>
       <View key={index}>
-        <TouchableOpacity
-          style={[styles.rowContainer,{ backgroundColor: category.color}]}
+        <Button
+          style={[styles.button, {backgroundColor: category.color}]}
           onPress={() => this.launchQuizz(category)}
+          type='standard'
+          isLoading={this.state.isLoading}
+          isDisabled={this.state.isLoading}
         >
-          <Text style={styles.categoryName}>{category.name}</Text>
-        </TouchableOpacity>
+          {category.name}
+        </Button>
       </View>,
     );
     return (

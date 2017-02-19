@@ -31,11 +31,11 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 18,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   answersContainer: {
     flex: 3,
     justifyContent: 'space-around',
-    padding: 15,
   },
   answersRowContainer: {
     flexDirection: 'row',
@@ -48,10 +48,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5,
     flex: 1,
+    padding: 10,
   },
   answerLabel: {
     color: '#FAFAFA',
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   quizzIsOverMessage: {
     flex: 1,
@@ -68,6 +70,8 @@ type PropsType = {
   addError: () => void,
   listIsEmpty: boolean,
   errorCount: number,
+  quizzNumber: number,
+  noErrorQuizzNumber: number,
   quizz: {
     answers: Array,
     question: string,
@@ -85,6 +89,8 @@ type PropsType = {
     errorCount: quizzStore.errorCount,
     getNextQuizz: () => quizzStore.getNextQuizz(),
     addError: () => quizzStore.addError(),
+    quizzNumber: quizzStore.quizzNumber,
+    noErrorQuizzNumber: quizzStore.noErrorQuizzNumber,
   };
 })
 @observer
@@ -210,12 +216,18 @@ class Quizz extends Component {
         }
         {this.props.listIsEmpty &&
           <View style={[styles.quizzIsOverMessage, {backgroundColor: category.color}]}>
-            <Text style={styles.questionText}>Catégorie {category.name} terminée!</Text>
+            <Text style={styles.questionText}>{`Catégorie ${category.name} terminée! \n`}</Text>
+            <Text style={styles.questionText}>
+              Vous avez répondu du premier coup à {this.props.noErrorQuizzNumber} questions sur {this.props.quizzNumber}!
+            </Text>
           </View>
         }
         {this.props.errorCount === 3 &&
           <View style={[styles.quizzIsOverMessage, {backgroundColor: category.color}]}>
-            <Text style={styles.questionText}>Vous avez fait trois erreurs ! Réessayez ! :) </Text>
+            <Text style={styles.questionText}>{'Vous avez fait trois erreurs !\n\n Réessayez ! \n'}</Text>
+            <Text style={styles.questionText}>
+              Vous avez répondu du premier coup à {this.props.noErrorQuizzNumber} questions sur {this.props.quizzNumber}!
+            </Text>
           </View>
         }
       </Page>

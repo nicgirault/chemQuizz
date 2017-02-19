@@ -6,6 +6,9 @@ export default class QuizzStore {
   @observable selectedQuizz = {};
   @observable listIsEmpty = false;
   @observable errorCount = 0;
+  @observable previousErrorCount = 0;
+  @observable quizzNumber = 0;
+  @observable noErrorQuizzNumber = 0;
 
   @action dispatchListIsEmpty() {
     this.listIsEmpty = true;
@@ -17,6 +20,10 @@ export default class QuizzStore {
 
   @action resetErrorCount() {
     this.errorCount = 0;
+  }
+
+  @action setQuizzNumber() {
+    this.quizzNumber = this.quizzList.length;
   }
 
   @action updateQuizzList(fetchedQuizzList) {
@@ -32,11 +39,21 @@ export default class QuizzStore {
     }
   }
 
+  @action updateNoErrorQuizzNumber() {
+    if(this.errorCount === this.previousErrorCount) {
+      this.noErrorQuizzNumber++;
+    }
+    this.previousErrorCount = this.errorCount;
+  }
+
   selectRandomQuizz() {
     if (this.quizzList.length === 0) {
       this.dispatchListIsEmpty();
     }
     this.updateSelectedQuizz([random(0, this.quizzList.length - 1)]);
+    if(this.quizzNumber !== this.quizzList.length) {
+      this.updateNoErrorQuizzNumber();
+    }
   }
 
   withdrawCurrentQuizz() {
@@ -51,6 +68,7 @@ export default class QuizzStore {
 
   fetchQuizzList(quizzList) {
     this.updateQuizzList(quizzList);
+    this.setQuizzNumber();
     this.resetErrorCount();
     this.selectRandomQuizz();
   }

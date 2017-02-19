@@ -12,7 +12,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-around',
-    alignItems: 'center',
   },
   welcome: {
     fontSize: 20,
@@ -30,6 +29,9 @@ const styles = StyleSheet.create({
   welcomeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+  },
+  button: {
+    marginHorizontal: 10,
   },
 });
 
@@ -63,12 +65,21 @@ class Home extends Component {
     },
   }
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+    };
+  }
+
   goToCategories = () => {
+    this.setState({isLoading: true});
     if(!this.props.currentUser.id) {
       this.goToLogIn();
     } else {
       api.getCategories()
         .then((categories) => {
+          this.setState({isLoading: false});
           this.props.navigator.push(
             Router.getRoute('categories', {categories})
           );
@@ -78,6 +89,7 @@ class Home extends Component {
   }
 
   goToLogIn = () => {
+    this.setState({isLoading: false});
     this.props.navigator.push(
       Router.getRoute('login')
     );
@@ -100,11 +112,25 @@ class Home extends Component {
             <Text style={[styles.welcome, {color: '#47FAD1'}]}>U</Text>
             <Text style={[styles.welcome, {color: '#FAD147'}]}>E</Text>
           </View>
-          <Button onPress={this.goToCategories}>Jouer !</Button>
+          <Button
+            style={styles.button}
+            onPress={this.goToCategories}
+            type='standard'
+            isLoading={this.state.isLoading}
+            isDisabled={this.state.isLoading}
+          >
+            Jouer !
+          </Button>
           { !!this.props.currentUser.email &&
             <View>
               <Text style={styles.disconnect}>Vous êtes connecté en tant que {this.props.currentUser.email}</Text>
-              <Button onPress={() => this.props.logOut()} type='outline'>Se déconnecter</Button>
+              <Button
+                styles={styles.button}
+                onPress={() => this.props.logOut()}
+                type='outline'
+              >
+                  Se déconnecter
+              </Button>
             </View>
           }
         </View>

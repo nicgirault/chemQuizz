@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { Keyboard, StyleSheet, Text, TextInput, View, TouchableWithoutFeedback } from 'react-native';
 import { inject, observer } from 'mobx-react/native';
 import { observe } from 'mobx';
 
@@ -15,16 +15,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-around',
-    alignItems: 'center',
+  },
+  inputContainer: {
+    flex: 0,
+    alignSelf: 'stretch',
   },
   textInput: {
+    marginVertical: 5,
     height: 40,
     borderColor: 'lightgray',
     borderWidth: 1,
     padding: 4
   },
   errorMessage: {
-    color: appStyle.colors.errorMessage
+    textAlign: 'center',
+    color: appStyle.colors.errorMessage,
+  },
+  button: {
+    marginHorizontal: 10,
   },
 });
 
@@ -32,7 +40,8 @@ type PropsType = {
   navigator: any,
   logUser: () => void,
   currentUser: any,
-  logError: any,
+  ErrorMessages: any,
+  clearErrorMessages: () => void,
 };
 
 @withNavigation
@@ -40,8 +49,9 @@ type PropsType = {
   const currentUserStore = allStores.currentUserStore;
   return {
     logUser: accountData => currentUserStore.logUser(accountData),
+    clearErrorMessages: () => currentUserStore.clearErrorMessages(),
     currentUser: currentUserStore.currentUser,
-    logError: currentUserStore.logError,
+    ErrorMessages: currentUserStore.ErrorMessages,
   };
 })
 @observer
@@ -57,15 +67,23 @@ class LogIn extends Component {
     this.state = {
       email: '',
       password: '',
+      isLoading: false,
     };
 
     observe(props.currentUser, 'id', (change) => {
       api.getCategories()
-        .then(categories => this.props.navigator.replace(Router.getRoute('categories', {categories})))
+        .then((categories) => {
+          this.setState({isLoading: false});
+          this.props.navigator.replace(Router.getRoute('categories', {categories}))
+        })
     });
+
+    observe(props.ErrorMessages, 'logError', change => this.setState({isLoading: false}));
   }
 
   logIn = () => {
+    Keyboard.dismiss();
+    this.setState({isLoading: true});
     this.props.logUser({
       email: this.state.email,
       password: this.state.password,
@@ -73,6 +91,7 @@ class LogIn extends Component {
   }
 
   goToSignUp = () => {
+    Keyboard.dismiss();
     this.props.navigator.push(
       Router.getRoute('signup')
     );
@@ -82,27 +101,48 @@ class LogIn extends Component {
 
   render() {
     return (
-      <Page>
-        <View style={styles.container}>
-          { this.props.logError && <Text style={styles.errorMessage}>Combinaison email - mot de passe incorrecte</Text>}
-          <TextInput
-            style={styles.textInput}
-            autoFocus
-            keyboardType='email-address'
-            placeholder='Email address'
-            onChangeText={(email) => this.setState({email})}
-            value={this.state.email}
-          />
-          <TextInput
-            style={styles.textInput}
-            placeholder='Password'
-            onChangeText={(password) => this.setState({password})}
-            value={this.state.password}
-          />
-          <Button onPress={this.logIn}>Connexion !</Button>
-          <Separator text="ou" />
-          <Button onPress={this.goToSignUp} type="outline">S&apos;incrire</Button>
-        </View>
+      <Page noNavBar>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View style={styles.container}>
+            { this.props.ErrorMessages.logError &&
+              <Text style={styles.errorMessage}>
+                Combinaison email - mot de passe incorrecte
+              </Text>
+            }
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.textInput}
+                onFocus={() => this.props.clearErrorMessages()}
+                keyboardType='email-address'
+                placeholder='Adresse Email'
+                onChangeText={(email) => this.setState({email})}
+                value={this.state.email}
+              />
+              <TextInput
+                style={styles.textInput}
+                onFocus={() => this.props.clearErrorMessages()}
+                placeholder='Mot de passe'
+                onChangeText={(password) => this.setState({password})}
+                value={this.state.password}
+              />
+            </View>
+            <Button
+              style={styles.button}
+              onPress={this.logIn}
+              type='standard'
+              isLoading={this.state.isLoading}
+              isDisabled={this.state.isLoading}
+            >Connexion !</Button>
+            <Separator text="ou" />
+            <Button
+              style={styles.button}
+              onPress={this.goToSignUp}
+              type="outline"
+            >
+              S&apos;incrire
+            </Button>
+          </View>
+        </TouchableWithoutFeedback>
       </Page>
     );
   }
