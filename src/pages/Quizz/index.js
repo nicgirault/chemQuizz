@@ -68,6 +68,7 @@ type PropsType = {
   navigator: any,
   getNextQuizz: () => void,
   addError: () => void,
+  resetNoErrorQuizzNumber: () => void,
   listIsEmpty: boolean,
   errorCount: number,
   quizzNumber: number,
@@ -89,6 +90,7 @@ type PropsType = {
     errorCount: quizzStore.errorCount,
     getNextQuizz: () => quizzStore.getNextQuizz(),
     addError: () => quizzStore.addError(),
+    resetNoErrorQuizzNumber: () => quizzStore.resetNoErrorQuizzNumber(),
     quizzNumber: quizzStore.quizzNumber,
     noErrorQuizzNumber: quizzStore.noErrorQuizzNumber,
   };
@@ -108,6 +110,10 @@ class Quizz extends Component {
   }
 
   props: PropsType;
+
+  componentWillMount() {
+    this.props.resetNoErrorQuizzNumber();
+  }
 
   navigateToNextQuizz() {
     this.props.getNextQuizz();
@@ -217,6 +223,12 @@ class Quizz extends Component {
         {this.props.listIsEmpty &&
           <View style={[styles.quizzIsOverMessage, {backgroundColor: category.color}]}>
             <Text style={styles.questionText}>{`Catégorie ${category.name} terminée! \n`}</Text>
+            <Text style={styles.questionText}>
+              {this.props.noErrorQuizzNumber === this.props.quizzNumber ?
+                'Félicitation, vous avez fait un score parfait:\n' :
+                'Félicitation: \n'
+              }
+            </Text>
             <Text style={styles.questionText}>
               Vous avez répondu du premier coup à {this.props.noErrorQuizzNumber} questions sur {this.props.quizzNumber}!
             </Text>

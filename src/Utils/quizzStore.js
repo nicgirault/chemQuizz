@@ -46,6 +46,10 @@ export default class QuizzStore {
     this.previousErrorCount = this.errorCount;
   }
 
+  @action resetNoErrorQuizzNumber() {
+    this.noErrorQuizzNumber = 0;
+  }
+
   selectRandomQuizz() {
     if (this.quizzList.length === 0) {
       this.dispatchListIsEmpty();
