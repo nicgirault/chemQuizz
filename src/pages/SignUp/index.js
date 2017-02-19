@@ -7,6 +7,7 @@ import { observe } from 'mobx';
 
 import Router from 'chemQuizz/src/Router.js';
 import { Page, Button } from 'chemQuizz/src/components';
+import appStyle from 'chemQuizz/src/appStyle';
 
 const styles = StyleSheet.create({
   container: {
@@ -22,6 +23,10 @@ const styles = StyleSheet.create({
     borderColor: 'lightgray',
     borderWidth: 1,
     padding: 4,
+  },
+  errorMessage: {
+    textAlign: 'center',
+    color: appStyle.colors.errorMessage,
   },
   button: {
     marginVertical: 10,
@@ -54,7 +59,7 @@ class SignUp extends Component {
     this.state = {
       email: '',
       password: '',
-      signError: '',
+      signUpError: '',
       isLoading: false,
     };
 
@@ -73,7 +78,20 @@ class SignUp extends Component {
     this.setState({isLoading: true});
     firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
     .then(() => this.logIn())
-    .catch(e => console.log(e.message))
+    .catch(e => {
+      let message = '';
+      switch (e.code) {
+        case 'auth/invalid-email':
+          message = 'Veuillez entrer une adresse email bien formatée !';
+          break;
+        case 'auth/weak-password':
+          message = 'Votre mot de passe doit faire au moins 6 charactères !';
+          break;
+        default:
+          message = 'Une erreur inconnue est survenue, vérifiez vos informations';
+      }
+      this.setState({isLoading: false, signUpError: message});
+    })
   }
 
   logIn = () => {
@@ -91,6 +109,11 @@ class SignUp extends Component {
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <View style={styles.container}>
             <View style={styles.inputContainer}>
+            { this.state.signUpError !== '' &&
+              <Text style={styles.errorMessage}>
+                {this.state.signUpError}
+              </Text>
+            }
               <TextInput
                 style={styles.textInput}
                 autoFocus
