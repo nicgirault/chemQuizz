@@ -123,6 +123,7 @@ class SignUp extends Component {
                 value={this.state.email}
               />
               <TextInput
+                secureTextEntry
                 style={styles.textInput}
                 placeholder='Mot de passe'
                 onChangeText={(password) => this.setState({password})}

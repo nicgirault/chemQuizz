@@ -123,6 +123,7 @@ class LogIn extends Component {
                 value={this.state.email}
               />
               <TextInput
+                secureTextEntry
                 style={styles.textInput}
                 onFocus={() => this.props.clearErrorMessages()}
                 placeholder='Mot de passe'
