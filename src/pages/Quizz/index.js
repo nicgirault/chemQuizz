@@ -4,6 +4,8 @@ import { withNavigation } from '@exponent/ex-navigation';
 import { Page, LifeCount } from 'chemQuizz/src/components';
 import { inject, observer } from 'mobx-react/native';
 import { includes, filter, isEqual } from 'lodash';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import _ from 'lodash';
 
 import appStyle from 'chemQuizz/src/appStyle';
 
@@ -58,7 +60,7 @@ const styles = StyleSheet.create({
   quizzIsOverMessage: {
     flex: 1,
     margin: 10,
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
     borderRadius: 5,
   },
@@ -197,6 +199,34 @@ class Quizz extends Component {
     const quizz = this.props.quizz;
     const submitAnswerHandler = this.submitAnswerBuilder(quizz);
     const answersGrid = this.answersGridBuilder();
+    const successAnswerIconName = _.sample([
+      'logo-snapchat',
+      'md-bowtie',
+      'md-basketball',
+      'md-boat',
+      'md-bonfire',
+      'ios-bug',
+      'md-bus',
+      'md-cog' ,
+      'md-flash',
+      'md-ionitron',
+      'ios-paper-plane',
+      'ios-ribbon',
+      'md-subway',
+      'md-trophy',
+      'logo-tux',
+      'md-planet',
+      'md-train',
+      'logo-twitter',
+      'logo-xbox',
+      'logo-youtube',
+      'logo-playstation',
+      'md-pizza',
+      'logo-octocat',
+      'md-jet',
+      'md-ice-cream',
+      'md-camera',
+    ])
 
     return (
       <Page noNavBar noMargin>
@@ -233,11 +263,16 @@ class Quizz extends Component {
         }
         {this.props.listIsEmpty &&
           <View style={[styles.quizzIsOverMessage, {backgroundColor: category.color}]}>
+            <Ionicons
+              name={successAnswerIconName}
+              size={150}
+              color='#FFFFFF'
+            />
             <Text style={styles.questionText}>{`Catégorie ${category.name} terminée! \n`}</Text>
             <Text style={styles.questionText}>
               {this.props.noErrorQuizzNumber === this.props.quizzNumber ?
-                'Félicitation, vous avez fait un score parfait:\n' :
-                'Félicitation: \n'
+                'Félicitations, vous avez fait un score parfait:\n' :
+                'Félicitations: \n'
               }
             </Text>
             <Text style={styles.questionText}>
@@ -247,9 +282,13 @@ class Quizz extends Component {
         }
         {this.props.errorCount === 3 &&
           <View style={[styles.quizzIsOverMessage, {backgroundColor: category.color}]}>
-            <Text style={styles.questionText}>{'Vous avez fait trois erreurs !\n\n Réessayez ! \n'}</Text>
+            <Ionicons
+              name='ios-nuclear'
+              size={150}
+              color='#FFFFFF'
+            />
             <Text style={styles.questionText}>
-              Vous avez répondu du premier coup à {this.props.noErrorQuizzNumber} questions sur {this.props.quizzNumber}!
+              {`Vous avez fait trois erreurs !\n\n Réessayez ! \n\n Vous avez répondu du premier coup à ${this.props.noErrorQuizzNumber} questions sur ${this.props.quizzNumber}!`}
             </Text>
           </View>
         }

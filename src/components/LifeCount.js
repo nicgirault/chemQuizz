@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { inject, observer } from 'mobx-react/native';
 import { StyleSheet, View } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import appStyle from 'chemQuizz/src/appStyle';
 
@@ -11,19 +12,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
   },
-  emptyDot: {
-    borderColor: appStyle.colors.primary,
-    borderWidth: 1,
-    width: 10,
-    height: 10,
-    marginHorizontal: 3,
-  },
-  coloredDot: {
-    borderColor: appStyle.colors.primary,
-    backgroundColor: appStyle.colors.primary,
-    borderWidth: 1,
-    width: 10,
-    height: 10,
+  heart: {
     marginHorizontal: 3,
   },
 });
@@ -46,9 +35,24 @@ class LifeCount extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={this.props.errorCount > 0 ? styles.emptyDot : styles.coloredDot}></View>
-        <View style={this.props.errorCount > 1 ? styles.emptyDot : styles.coloredDot}></View>
-        <View style={this.props.errorCount > 2 ? styles.emptyDot : styles.coloredDot}></View>
+        <Ionicons
+          name={this.props.errorCount > 0 ? "md-heart-outline" : "md-heart"}
+          size={20}
+          color='red'
+          style={styles.heart}
+        />
+        <Ionicons
+          name={this.props.errorCount > 1 ? "md-heart-outline" : "md-heart"}
+          size={20}
+          color='red'
+          style={styles.heart}
+        />
+        <Ionicons
+          name={this.props.errorCount > 2 ? "md-heart-outline" : "md-heart"}
+          size={20}
+          color='red'
+          style={styles.heart}
+        />
       </View>
     );
   }
