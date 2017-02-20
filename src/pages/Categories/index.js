@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
 import Router from 'chemQuizz/src/Router.js';
 import { Page, Button } from 'chemQuizz/src/components';
@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 5,
     borderRadius: 5,
+    justifyContent: 'space-around',
   },
   categoryName: {
     color: '#FFFFFF',
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   button: {
-    marginHorizontal: 10,
+    flex: 1,
   },
 });
 
@@ -78,7 +79,6 @@ class Categories extends Component {
           style={[styles.button, {backgroundColor: category.color}]}
           onPress={() => this.launchQuizz(category)}
           type='standard'
-          isLoading={this.state.isLoading}
           isDisabled={this.state.isLoading}
         >
           {category.name}
@@ -88,6 +88,19 @@ class Categories extends Component {
     return (
       <Page noNavBar>
         <ScrollView style={styles.container}>
+          { !!this.state.isLoading &&
+            <View style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              justifyContent:'center',
+              alignItems:'center',
+            }}>
+              <ActivityIndicator color='#00CE89' size='large'/>
+            </View>
+          }
           {list}
         </ScrollView>
       </Page>

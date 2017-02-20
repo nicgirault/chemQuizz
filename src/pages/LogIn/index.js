@@ -40,7 +40,7 @@ type PropsType = {
   navigator: any,
   logUser: () => void,
   currentUser: any,
-  ErrorMessages: any,
+  errorMessages: any,
   clearErrorMessages: () => void,
 };
 
@@ -51,7 +51,7 @@ type PropsType = {
     logUser: accountData => currentUserStore.logUser(accountData),
     clearErrorMessages: () => currentUserStore.clearErrorMessages(),
     currentUser: currentUserStore.currentUser,
-    ErrorMessages: currentUserStore.ErrorMessages,
+    errorMessages: currentUserStore.errorMessages,
   };
 })
 @observer
@@ -77,8 +77,12 @@ class LogIn extends Component {
           this.props.navigator.replace(Router.getRoute('categories', {categories}))
         })
     });
+  }
 
-    observe(props.ErrorMessages, 'logError', change => this.setState({isLoading: false}));
+  componentWillUpdate() {
+    if(this.state.isLoading && this.props.errorMessages.logError) {
+      this.setState({isLoading: false});
+    }
   }
 
   logIn = () => {
@@ -104,7 +108,7 @@ class LogIn extends Component {
       <Page noNavBar>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <View style={styles.container}>
-            { this.props.ErrorMessages.logError &&
+            { !!this.props.errorMessages.logError &&
               <Text style={styles.errorMessage}>
                 Combinaison email - mot de passe incorrecte
               </Text>

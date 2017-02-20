@@ -6,15 +6,15 @@ export default class QuizzStore {
   @observable selectedQuizz = {};
   @observable listIsEmpty = false;
   @observable errorCount = 0;
-  @observable previousErrorCount = 0;
   @observable quizzNumber = 0;
   @observable noErrorQuizzNumber = 0;
+  @observable previousErrorCount = 0;
 
   @action dispatchListIsEmpty() {
     this.listIsEmpty = true;
   }
 
-  @action addError() {
+  @action addError(question) {
     this.errorCount++;
   }
 

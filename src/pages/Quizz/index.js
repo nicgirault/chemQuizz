@@ -69,6 +69,7 @@ type PropsType = {
   getNextQuizz: () => void,
   addError: () => void,
   resetNoErrorQuizzNumber: () => void,
+  pushAnswerToFirebase: () => void,
   listIsEmpty: boolean,
   errorCount: number,
   quizzNumber: number,
@@ -84,6 +85,7 @@ type PropsType = {
 @withNavigation
 @inject((allStores) => {
   const quizzStore = allStores.quizzStore;
+  const currentUserStore = allStores.currentUserStore;
   return {
     quizz: quizzStore.selectedQuizz,
     listIsEmpty: quizzStore.listIsEmpty,
@@ -91,6 +93,7 @@ type PropsType = {
     getNextQuizz: () => quizzStore.getNextQuizz(),
     addError: () => quizzStore.addError(),
     resetNoErrorQuizzNumber: () => quizzStore.resetNoErrorQuizzNumber(),
+    pushAnswerToFirebase: (answer) => currentUserStore.pushAnswerToFirebase(answer),
     quizzNumber: quizzStore.quizzNumber,
     noErrorQuizzNumber: quizzStore.noErrorQuizzNumber,
   };
@@ -133,12 +136,20 @@ class Quizz extends Component {
   }
 
   handleError(answerKey) {
+    let answer = {
+      question: this.props.quizz.question,
+      answer: this.props.quizz.answers[answerKey],
+      isError: false,
+      createdAt: Date.now(),
+    }
     const isError = this.props.quizz.type === 'sortOverFour' ?
       (answerKey !== this.props.quizz.correct[this.state.selectedIndexes.length - 1]) :
       !includes(this.props.quizz.correct, answerKey);
     if (isError) {
+      answer.isError = true;
       this.props.addError();
     }
+    this.props.pushAnswerToFirebase(answer)
   }
 
   submitAnswerBuilder(quizz) {

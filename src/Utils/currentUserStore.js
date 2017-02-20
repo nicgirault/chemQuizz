@@ -16,13 +16,24 @@ export default class CurrentUserStore {
   USEREMAIL_STORAGE_KEY = 'USEREMAIL';
 
   @observable currentUser = this.getEmptyUser();
-  @observable ErrorMessages = {logError: null};
+  @observable errorMessages = this.getEmptyErrorMessages();
+
+  getEmptyErrorMessages() {
+    return {
+      logError: false,
+    };
+  }
 
   getEmptyUser() {
     return {
       id: null,
       email: null,
     };
+  }
+
+  pushAnswerToFirebase(answer) {
+    const answerFirebaseKey = firebase.database().ref().child('answers').push().key;
+    firebase.database().ref(`/answers/${this.currentUser.id}/${answerFirebaseKey}`).set(answer);
   }
 
   @action logUser(accountData) {
@@ -35,7 +46,9 @@ export default class CurrentUserStore {
         email: loggedUser.email,
       });
     })
-    .catch(error => extendObservable(this.ErrorMessages, {logError: error}))
+    .catch(error => {
+      extendObservable(this.errorMessages, {logError: true});
+    })
   }
 
   @action logOut() {
@@ -45,6 +58,6 @@ export default class CurrentUserStore {
   }
 
   @action clearErrorMessages() {
-    this.ErrorMessages = {logError: null};
+    this.errorMessages = this.getEmptyErrorMessages();
   }
 }
