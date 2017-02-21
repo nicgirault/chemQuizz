@@ -226,6 +226,7 @@ class Quizz extends Component {
       'md-jet',
       'md-ice-cream',
       'md-camera',
+      'md-flame',
     ])
 
     return (
