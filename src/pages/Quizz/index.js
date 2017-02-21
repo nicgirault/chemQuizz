@@ -3,9 +3,8 @@ import { StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
 import { Page, LifeCount } from 'chemQuizz/src/components';
 import { inject, observer } from 'mobx-react/native';
-import { includes, filter, isEqual } from 'lodash';
+import { includes, filter, isEqual, sample } from 'lodash';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import _ from 'lodash';
 
 import appStyle from 'chemQuizz/src/appStyle';
 
@@ -95,7 +94,7 @@ type PropsType = {
     getNextQuizz: () => quizzStore.getNextQuizz(),
     addError: () => quizzStore.addError(),
     resetNoErrorQuizzNumber: () => quizzStore.resetNoErrorQuizzNumber(),
-    pushAnswerToFirebase: (answer) => currentUserStore.pushAnswerToFirebase(answer),
+    pushAnswerToFirebase: answer => currentUserStore.pushAnswerToFirebase(answer),
     quizzNumber: quizzStore.quizzNumber,
     noErrorQuizzNumber: quizzStore.noErrorQuizzNumber,
   };
@@ -114,8 +113,6 @@ class Quizz extends Component {
     };
   }
 
-  props: PropsType;
-
   componentWillMount() {
     this.props.resetNoErrorQuizzNumber();
   }
@@ -133,17 +130,17 @@ class Quizz extends Component {
         (this.state.selectedIndexes[index] === this.props.quizz.correct[index]) :
         includes(this.props.quizz.correct, value);
       return filter;
-    })
+    });
     this.setState({ selectedIndexes: clearedSelectedIndexes }, cb);
   }
 
   handleError(answerKey) {
-    let answer = {
+    const answer = {
       question: this.props.quizz.question,
       answer: this.props.quizz.answers[answerKey],
       isError: false,
       createdAt: Date.now(),
-    }
+    };
     const isError = this.props.quizz.type === 'sortOverFour' ?
       (answerKey !== this.props.quizz.correct[this.state.selectedIndexes.length - 1]) :
       !includes(this.props.quizz.correct, answerKey);
@@ -151,7 +148,7 @@ class Quizz extends Component {
       answer.isError = true;
       this.props.addError();
     }
-    this.props.pushAnswerToFirebase(answer)
+    this.props.pushAnswerToFirebase(answer);
   }
 
   submitAnswerBuilder(quizz) {
@@ -164,7 +161,7 @@ class Quizz extends Component {
             if (isEqual(validationList, quizz.correct.slice())) {
               setTimeout(() => this.navigateToNextQuizz(), 500);
             }
-          })
+          });
         }
       });
     };
@@ -186,20 +183,20 @@ class Quizz extends Component {
         return { backgroundColor: appStyle.colors.primary };
       } else if (quizz.type === 'sortOverFour' && sortOverFourCondition) {
         return { backgroundColor: appStyle.colors.primary };
-      } else {
-        return { backgroundColor: '#F69F36' };
       }
-    } else {
-      return { backgroundColor: '#131313' };
+      return { backgroundColor: '#F69F36' };
     }
+    return { backgroundColor: '#131313' };
   }
+
+  props: PropsType;
 
   render() {
     const category = this.props.route.params.category;
     const quizz = this.props.quizz;
     const submitAnswerHandler = this.submitAnswerBuilder(quizz);
     const answersGrid = this.answersGridBuilder();
-    const successAnswerIconName = _.sample([
+    const successAnswerIconName = sample([
       'logo-snapchat',
       'md-bowtie',
       'md-basketball',
@@ -207,7 +204,7 @@ class Quizz extends Component {
       'md-bonfire',
       'ios-bug',
       'md-bus',
-      'md-cog' ,
+      'md-cog',
       'md-flash',
       'md-ionitron',
       'ios-paper-plane',
@@ -227,7 +224,7 @@ class Quizz extends Component {
       'md-ice-cream',
       'md-camera',
       'md-flame',
-    ])
+    ]);
 
     return (
       <Page noNavBar noMargin>
@@ -236,7 +233,7 @@ class Quizz extends Component {
             <View style={styles.lifeCountContainer}>
               <LifeCount />
             </View>
-            <View style={[styles.questionContainer, {backgroundColor: category.color}]}>
+            <View style={[styles.questionContainer, { backgroundColor: category.color }]}>
               <Text style={styles.questionText}>{quizz.question}</Text>
             </View>
             <View style={styles.answersContainer}>
@@ -263,11 +260,11 @@ class Quizz extends Component {
           </View>
         }
         {this.props.listIsEmpty &&
-          <View style={[styles.quizzIsOverMessage, {backgroundColor: category.color}]}>
+          <View style={[styles.quizzIsOverMessage, { backgroundColor: category.color }]}>
             <Ionicons
               name={successAnswerIconName}
               size={150}
-              color='#FFFFFF'
+              color="#FFFFFF"
             />
             <Text style={styles.questionText}>{`Catégorie ${category.name} terminée! \n`}</Text>
             <Text style={styles.questionText}>
@@ -282,11 +279,11 @@ class Quizz extends Component {
           </View>
         }
         {this.props.errorCount === 3 &&
-          <View style={[styles.quizzIsOverMessage, {backgroundColor: category.color}]}>
+          <View style={[styles.quizzIsOverMessage, { backgroundColor: category.color }]}>
             <Ionicons
-              name='ios-nuclear'
+              name="ios-nuclear"
               size={150}
-              color='#FFFFFF'
+              color="#FFFFFF"
             />
             <Text style={styles.questionText}>
               {`Vous avez fait trois erreurs !\n\n Réessayez ! \n\n Vous avez répondu du premier coup à ${this.props.noErrorQuizzNumber} questions sur ${this.props.quizzNumber}!`}
