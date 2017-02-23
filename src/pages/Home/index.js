@@ -61,7 +61,7 @@ type PropsType = {
 class Home extends Component {
   static route = {
     navigationBar: {
-      title: 'chemQuizz',
+      title: 'Sraï-Quizz',
     },
   }
 
